@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-05T05:17:30.000Z",
+  "lastUpdated": "2026-02-05T05:20:30.000Z",
   "project": {
     "name": "Strapi Portfolio Upload + Review Workflow",
     "publicSafe": true
@@ -30,8 +30,8 @@
       "area": "上傳入口（Upload Portal）",
       "task": "MVP 實作：登入 + 表單骨架 + API route stubs",
       "owner": "subagent-upload-portal-implementation",
-      "status": "inprogress",
-      "notes": "進行中：先把 portal 跑起來（mobile-first），再接 Strapi 真實寫入/上傳。"
+      "status": "done",
+      "notes": "已做出可跑的 MVP（demo 登入、角色守門、submit 表單骨架、API stubs）。下一步是把它整合/搬進既有 Next 專案並接 Strapi。"
     },
     {
       "area": "Workflow",
@@ -68,7 +68,7 @@
       "name": "subagent-upload-portal-implementation",
       "goal": "先把 Upload Portal MVP 跑起來（登入 + 表單骨架 + server routes stubs），之後再接 Strapi。",
       "deliverables": ["可本機跑的 Next app", "登入頁/守門", "上傳表單骨架"],
-      "status": "running"
+      "status": "done"
     }
   ],
   "activity": [
@@ -91,6 +91,11 @@
       "time": "2026-02-05T05:13:30.000Z",
       "type": "done",
       "text": "子 agent A 完成：提供 Strapi 端新增 review_status 與 Public API 只讀 approved+published 的 controller 覆寫方案。"
+    },
+    {
+      "time": "2026-02-05T05:20:00.000Z",
+      "type": "done",
+      "text": "子 agent C 完成：已在本機建立可跑的 Upload Portal MVP（demo 登入、角色守門、提交表單骨架、API stubs），待整合進既有 Next 專案並接 Strapi。"
     }
   ]
 }
