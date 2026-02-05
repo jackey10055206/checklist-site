@@ -1,58 +1,51 @@
 {
-  "lastUpdated": "2026-02-05T05:32:00.000Z",
+  "lastUpdated": "2026-02-05T06:05:00.000Z",
   "project": {
-    "name": "Strapi Portfolio Upload + Review Workflow",
+    "name": "公司網站：Upload Portal（portfolio 上傳＋審核）",
     "publicSafe": true
   },
   "statusRows": [
     {
-      "area": "上傳入口（Upload Portal）",
-      "task": "整合進既有前台（/portal 路由）",
-      "owner": "subagent-portal-integrate-into-frontend",
+      "area": "Upload Portal",
+      "task": "A：送出後進入 pending，admin 可在 /portal/admin 審核",
+      "owner": "subagent-portal-strapi-A-text-flow",
       "status": "inprogress",
-      "notes": "把可跑的 portal MVP 搬到 my-portfolio-frontend 的 /app/portal/*，並確保主站不顯示入口。"
+      "notes": "先做純文字欄位：建立 draft → submit pending → admin queue 可見。"
     },
     {
-      "area": "上傳入口（Upload Portal）",
-      "task": "接 Strapi（server-side token）與審核狀態規則",
-      "owner": "subagent-portal-strapi-wiring",
+      "area": "Upload Portal",
+      "task": "B：圖片上傳（cover+gallery）並串 Strapi media",
+      "owner": "subagent-portal-strapi-B-media-upload",
       "status": "inprogress",
-      "notes": "Server-side 代打 Strapi；uploader 改已發布內容→unpublish+pending；admin approve→publish。"
-    },
-    {
-      "area": "部署",
-      "task": "checklist.jackeyluo.me 對外上線（Cloudflare Pages + Git）",
-      "owner": "main",
-      "status": "inprogress",
-      "notes": "若綁自訂網域時 DNS 記錄顯示 read-only，需先到 DNS 解除/刪掉衝突記錄後再綁。"
+      "notes": "Proxy 上傳到 Strapi /api/upload（server-only token），並把 media id 綁到 portfolio。"
     }
   ],
   "agents": [
     {
-      "key": "D",
-      "name": "subagent-portal-integrate-into-frontend",
-      "goal": "把 Upload Portal MVP 整合到既有前台 Next.js（/portal），不影響公開站版面。",
-      "deliverables": ["/portal/login|dashboard|submit|admin", "角色守門（middleware/guards）", "本機可跑 + README"],
+      "key": "A",
+      "name": "subagent-portal-strapi-A-text-flow",
+      "goal": "把 /portal/submit 真正寫入 Strapi，送審後出現在 /portal/admin 的 pending 清單。",
+      "deliverables": ["Strapi client（server-only）", "submit/pending API routes", "admin queue UI", "權限限制（uploader 只能看自己）"],
       "status": "running"
     },
     {
-      "key": "E",
-      "name": "subagent-portal-strapi-wiring",
-      "goal": "在 portal 端建立 Strapi server-side client 與 API routes stubs，並落地狀態機規則（待填 token）。",
-      "deliverables": ["StrapiClient wrapper", ".env.example（不含秘密）", "create/update/submit/approve/unpublish routes"],
+      "key": "B",
+      "name": "subagent-portal-strapi-B-media-upload",
+      "goal": "完成 cover + gallery 圖片上傳並綁定到 Strapi portfolio，審核頁能看到圖片。",
+      "deliverables": ["upload proxy route", "media attach", "基本驗證（type/size）", "文件與 .env.example"],
       "status": "running"
     }
   ],
   "activity": [
     {
-      "time": "2026-02-05T05:31:00.000Z",
-      "type": "decision",
-      "text": "決策：主站不顯示登入入口；主管用固定網址 /portal 進入（書籤/加到主畫面）。"
+      "time": "2026-02-05T06:04:30.000Z",
+      "type": "spawn",
+      "text": "已啟動 2 個子 agent：A(文字送審流程)、B(圖片上傳串 Strapi)。"
     },
     {
-      "time": "2026-02-05T05:32:00.000Z",
-      "type": "spawn",
-      "text": "已啟動 2 個子 agent：D(整合 portal 到既有前台)、E(接 Strapi 與審核規則)。"
+      "time": "2026-02-05T06:05:00.000Z",
+      "type": "note",
+      "text": "Portal 已有兩組帳密（uploader/admin）可登入；接下來完成 A+B 後，submit 會真的寫入 Strapi 並進入審核流程。"
     }
   ]
 }
