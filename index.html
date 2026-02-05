@@ -455,39 +455,6 @@
     </footer>
   </main>
 
-  <script>
-    (function(){
-      // Public-safe: no analytics, no tracking. Only client-side filtering.
-      const $ = (sel) => document.querySelector(sel);
-      const q = $('#q');
-      const statusFilter = $('#statusFilter');
-      const table = $('#statusTable');
-      const lastUpdated = $('#lastUpdated');
-
-      // Render a human-readable build time (local to the viewer).
-      const now = new Date();
-      lastUpdated.textContent = now.toLocaleString(undefined, {year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit'});
-
-      function norm(s){ return (s||'').toLowerCase().trim(); }
-
-      function applyFilters(){
-        const query = norm(q.value);
-        const wantedStatus = statusFilter.value;
-        const rows = table.tBodies[0].rows;
-
-        for(const row of rows){
-          const rowStatus = row.getAttribute('data-status') || 'todo';
-          const text = norm(row.innerText);
-          const matchQuery = !query || text.includes(query);
-          const matchStatus = (wantedStatus === 'all') || (rowStatus === wantedStatus);
-          row.style.display = (matchQuery && matchStatus) ? '' : 'none';
-        }
-      }
-
-      q.addEventListener('input', applyFilters);
-      statusFilter.addEventListener('change', applyFilters);
-      applyFilters();
-    })();
-  </script>
+  <script src="./app.js" defer></script>
 </body>
 </html>
