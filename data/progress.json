@@ -1,101 +1,58 @@
 {
-  "lastUpdated": "2026-02-05T05:20:30.000Z",
+  "lastUpdated": "2026-02-05T05:32:00.000Z",
   "project": {
     "name": "Strapi Portfolio Upload + Review Workflow",
     "publicSafe": true
   },
   "statusRows": [
     {
-      "area": "Strapi",
-      "task": "新增 portfolio.review_status（審核狀態）",
-      "owner": "subagent-strapi-review-workflow",
-      "status": "done",
-      "notes": "已產出可直接照做的 Strapi 步驟/程式片段：新增 review_status + submitted_at/reviewed_at，並可用 controller 強制 Public 只能讀 approved+published。"
-    },
-    {
-      "area": "前台網站",
-      "task": "Portfolio 對外只顯示 approved + published",
-      "owner": "main",
-      "status": "todo",
-      "notes": "API 查詢/前端取資料要加 filter，避免未審內容外露。"
+      "area": "上傳入口（Upload Portal）",
+      "task": "整合進既有前台（/portal 路由）",
+      "owner": "subagent-portal-integrate-into-frontend",
+      "status": "inprogress",
+      "notes": "把可跑的 portal MVP 搬到 my-portfolio-frontend 的 /app/portal/*，並確保主站不顯示入口。"
     },
     {
       "area": "上傳入口（Upload Portal）",
-      "task": "架構設計：整合進既有 Next app 的 /portal",
-      "owner": "subagent-upload-portal-architecture",
-      "status": "done",
-      "notes": "建議整合現有 Next.js（App Router）新增 /portal；帳密登入+bcrypt+cookie session；所有寫入由 Next 伺服器端代打 Strapi（token 不下放）。"
-    },
-    {
-      "area": "上傳入口（Upload Portal）",
-      "task": "MVP 實作：登入 + 表單骨架 + API route stubs",
-      "owner": "subagent-upload-portal-implementation",
-      "status": "done",
-      "notes": "已做出可跑的 MVP（demo 登入、角色守門、submit 表單骨架、API stubs）。下一步是把它整合/搬進既有 Next 專案並接 Strapi。"
-    },
-    {
-      "area": "Workflow",
-      "task": "Uploader 修改已發布內容 → 自動下線（unpublish）+ 回 pending",
-      "owner": "subagent-upload-portal-architecture",
-      "status": "done",
-      "notes": "規則已定案：在 Upload Portal 的 server 端 PATCH 強制；若 uploader 編輯 approved+published，則 unpublish 並回 pending，需 admin 再審再 publish。"
+      "task": "接 Strapi（server-side token）與審核狀態規則",
+      "owner": "subagent-portal-strapi-wiring",
+      "status": "inprogress",
+      "notes": "Server-side 代打 Strapi；uploader 改已發布內容→unpublish+pending；admin approve→publish。"
     },
     {
       "area": "部署",
       "task": "checklist.jackeyluo.me 對外上線（Cloudflare Pages + Git）",
       "owner": "main",
       "status": "inprogress",
-      "notes": "Cloudflare Pages 連 Git 部署中；若綁自訂網域時 DNS 記錄顯示 read-only，需先到 DNS 解除/刪掉衝突記錄後再綁。"
+      "notes": "若綁自訂網域時 DNS 記錄顯示 read-only，需先到 DNS 解除/刪掉衝突記錄後再綁。"
     }
   ],
   "agents": [
     {
-      "key": "A",
-      "name": "subagent-strapi-review-workflow",
-      "goal": "在 Strapi 實作 portfolio 審核狀態欄位與 Public 讀取限制（公開安全）。",
-      "deliverables": ["Strapi UI 步驟", "schema.json 片段", "controller 覆寫（Public 只讀 approved+published）"],
-      "status": "done"
+      "key": "D",
+      "name": "subagent-portal-integrate-into-frontend",
+      "goal": "把 Upload Portal MVP 整合到既有前台 Next.js（/portal），不影響公開站版面。",
+      "deliverables": ["/portal/login|dashboard|submit|admin", "角色守門（middleware/guards）", "本機可跑 + README"],
+      "status": "running"
     },
     {
-      "key": "B",
-      "name": "subagent-upload-portal-architecture",
-      "goal": "定義 Upload Portal 架構與安全邊界（整合 /portal）。",
-      "deliverables": ["路由/資料夾結構", "登入/角色模型", "API routes 規格與狀態機"],
-      "status": "done"
-    },
-    {
-      "key": "C",
-      "name": "subagent-upload-portal-implementation",
-      "goal": "先把 Upload Portal MVP 跑起來（登入 + 表單骨架 + server routes stubs），之後再接 Strapi。",
-      "deliverables": ["可本機跑的 Next app", "登入頁/守門", "上傳表單骨架"],
-      "status": "done"
+      "key": "E",
+      "name": "subagent-portal-strapi-wiring",
+      "goal": "在 portal 端建立 Strapi server-side client 與 API routes stubs，並落地狀態機規則（待填 token）。",
+      "deliverables": ["StrapiClient wrapper", ".env.example（不含秘密）", "create/update/submit/approve/unpublish routes"],
+      "status": "running"
     }
   ],
   "activity": [
     {
-      "time": "2026-02-05T03:58:00.000Z",
-      "type": "note",
-      "text": "規格確認：Uploader 修改已發布內容 → 立刻 unpublish 並回 pending；Uploader 只能看自己的資料。"
+      "time": "2026-02-05T05:31:00.000Z",
+      "type": "decision",
+      "text": "決策：主站不顯示登入入口；主管用固定網址 /portal 進入（書籤/加到主畫面）。"
     },
     {
-      "time": "2026-02-05T05:10:00.000Z",
+      "time": "2026-02-05T05:32:00.000Z",
       "type": "spawn",
-      "text": "已啟動 3 個子 agent：A(Strapi review_status)、B(Upload Portal 架構)、C(Upload Portal MVP 實作)。"
-    },
-    {
-      "time": "2026-02-05T05:13:00.000Z",
-      "type": "done",
-      "text": "子 agent B 完成：建議整合現有 Next.js 新增 /portal，上傳/審核皆由 Next server 端代打 Strapi，並定義狀態機與權限。"
-    },
-    {
-      "time": "2026-02-05T05:13:30.000Z",
-      "type": "done",
-      "text": "子 agent A 完成：提供 Strapi 端新增 review_status 與 Public API 只讀 approved+published 的 controller 覆寫方案。"
-    },
-    {
-      "time": "2026-02-05T05:20:00.000Z",
-      "type": "done",
-      "text": "子 agent C 完成：已在本機建立可跑的 Upload Portal MVP（demo 登入、角色守門、提交表單骨架、API stubs），待整合進既有 Next 專案並接 Strapi。"
+      "text": "已啟動 2 個子 agent：D(整合 portal 到既有前台)、E(接 Strapi 與審核規則)。"
     }
   ]
 }
