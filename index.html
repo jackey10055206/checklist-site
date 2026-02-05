@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Project Checklist & Sub-Agent Plan</title>
+  <meta name="description" content="Public-friendly project checklist for Strapi + Next upload app, review workflow, and deployment/security options." />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <div>
+        <h1>Project Checklist & Sub-Agent Plan</h1>
+        <p class="subtitle">Public-safe project dashboard. Progress is loaded from a JSON file (no secrets).</p>
+        <div class="kv" aria-label="project meta">
+          <span class="pill"><strong>Stack:</strong> Strapi (CMS) + Next.js (Upload app)</span>
+          <span class="pill"><strong>Focus:</strong> Auth/roles, review workflow, deployment & security</span>
+          <span class="pill"><strong>Last updated:</strong> <span id="lastUpdated">—</span></span>
+        </div>
+      </div>
+      <div class="badges" aria-label="legend">
+        <span class="badge"><span class="status done" aria-hidden="true"></span> Done</span>
+        <span class="badge"><span class="status inprogress" aria-hidden="true"></span> In progress</span>
+        <span class="badge"><span class="status" aria-hidden="true"></span> To do</span>
+        <span class="badge"><span class="status blocked" aria-hidden="true"></span> Blocked</span>
+      </div>
+    </header>
+
+    <section class="grid" aria-label="overview">
+      <article class="card">
+        <h2>How to use</h2>
+        <div class="callout">
+          <strong>Goal:</strong> A single place to track what must change in Strapi, what the Next upload app must do (auth/roles), how review/publish works, and what deployment/security posture we want.
+        </div>
+        <ol class="ul">
+          <li>Start with the <strong>Status Table</strong> to see what’s blocking progress.</li>
+          <li>Expand tasks in each section for acceptance criteria and notes.</li>
+          <li>Spin up sub-agents from the <strong>Sub-Agent Plan</strong> to parallelize work.</li>
+        </ol>
+        <p class="small">Tip: this page is designed to be hosted publicly (no credentials, no internal URLs, no secrets).</p>
+      </article>
+
+      <aside class="card">
+        <h2>Quick links</h2>
+        <ul class="ul">
+          <li><a href="#status">Status table</a></li>
+          <li><a href="#strapi">Strapi changes</a></li>
+          <li><a href="#next">Next upload app (auth/roles)</a></li>
+          <li><a href="#review">Review workflow</a></li>
+          <li><a href="#deploy">Deployment & security options</a></li>
+          <li><a href="#subagents">Sub-agent plan</a></li>
+          <li><a href="#activity">Activity log</a></li>
+        </ul>
+        <h3>Filters</h3>
+        <div class="filters" role="group" aria-label="filters">
+          <label>
+            Status
+            <select id="statusFilter">
+              <option value="all">All</option>
+              <option value="todo">To do</option>
+              <option value="inprogress">In progress</option>
+              <option value="done">Done</option>
+              <option value="blocked">Blocked</option>
+            </select>
+          </label>
+          <label>
+            Search
+            <input id="q" type="search" placeholder="Find a task (title, owner, notes)…" />
+          </label>
+        </div>
+        <p class="small">Filtering only affects the status table.</p>
+      </aside>
+    </section>
+
+    <section id="status" class="section">
+      <h2>Status Table</h2>
+      <div class="table-wrap" aria-label="status table">
+        <table id="statusTable">
+          <thead>
+            <tr>
+              <th style="width:14%">Area</th>
+              <th style="width:22%">Task</th>
+              <th style="width:14%">Owner</th>
+              <th style="width:12%">Status</th>
+              <th style="width:38%">Notes / Acceptance criteria (public-safe)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows are rendered from ./data/progress.json by app.js -->
+          </tbody>
+        </table>
+      </div>
+      <p class="small">This table is rendered from <code>data/progress.json</code>. Update that file to reflect real owners/statuses.</p>
+    </section>
+
+    <section id="strapi" class="section">
+      <h2>Strapi changes</h2>
+
+      <details class="details" open>
+        <summary>
+          <span>1) Content types & relations</span>
+          <span class="meta">Deliverable: schema checklist</span>
+        </summary>
+        <ul class="ul">
+          <li>Define a primary content type (example): <code>Submission</code> with fields: title, description, submitter identity ref, status, timestamps.</li>
+          <li>Model uploaded assets: via Strapi Media Library and/or external object storage references.</li>
+          <li>Store review metadata: reviewer, decision, notes, decision timestamp, change history.</li>
+          <li>Plan for versioning: keep a record of what was approved/published.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>2) Permissions & roles (least privilege)</span>
+          <span class="meta">Deliverable: roles matrix</span>
+        </summary>
+        <ul class="ul">
+          <li><strong>Submitter</strong>: create submissions, view own submissions, upload assets, cannot publish.</li>
+          <li><strong>Reviewer</strong>: view all submitted items, add review notes, approve/reject.</li>
+          <li><strong>Admin</strong>: manage users/roles, override, configure plugins, deployment env.</li>
+          <li>Prefer explicit permission grants; avoid “super user” accounts for daily use.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>3) API surface & tokens</span>
+          <span class="meta">Deliverable: API contract</span>
+        </summary>
+        <ul class="ul">
+          <li>Decide which endpoints are used by Next app (REST/GraphQL) and which are internal-only.</li>
+          <li>Use server-to-server credentials only on the server (never in browser JS).</li>
+          <li>Document required scopes for each operation (create submission, upload, list review queue, update status).</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>4) Storage strategy</span>
+          <span class="meta">Deliverable: storage decision</span>
+        </summary>
+        <ul class="ul">
+          <li>Choose local vs S3-compatible storage for media assets.</li>
+          <li>If external storage: use private buckets + signed URLs + upload size limits.</li>
+          <li>Define retention and deletion policies for rejected/expired submissions.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="activity" class="section">
+      <h2>Activity log</h2>
+      <div class="card" id="activityLog"></div>
+      <p class="small">Public-safe log: which steps were decided, and what agents were spawned (no internal URLs or credentials).</p>
+    </section>
+
+    <section id="next" class="section">
+      <h2>Next upload app (auth/roles)</h2>
+
+      <details class="details" open>
+        <summary>
+          <span>1) Authentication approach</span>
+          <span class="meta">Deliverable: chosen approach + rationale</span>
+        </summary>
+        <ul class="ul">
+          <li>Pick an auth model: email magic link, OAuth (Google/Microsoft), or SSO/SAML (enterprise).</li>
+          <li>Ensure sessions are httpOnly cookies; protect against CSRF where applicable.</li>
+          <li>Clarify identity source of truth: IdP vs Strapi Users & Permissions plugin.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>2) Role mapping & authorization</span>
+          <span class="meta">Deliverable: mapping rules</span>
+        </summary>
+        <ul class="ul">
+          <li>Map authenticated users to roles (submitter/reviewer/admin).</li>
+          <li>Enforce authorization server-side (API routes / server actions) and double-check at Strapi layer.</li>
+          <li>Hide UI affordances for unauthorized actions, but never rely only on UI gating.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>3) Upload flow</span>
+          <span class="meta">Deliverable: end-to-end upload spec</span>
+        </summary>
+        <ul class="ul">
+          <li>Decide: direct-to-storage upload (preferred for large files) vs proxy through Next server.</li>
+          <li>Validate: type/size, malware scanning hook (if needed), filename normalization.</li>
+          <li>Show: progress, retries, and clear error messages.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>4) Reviewer experience</span>
+          <span class="meta">Deliverable: review queue UI</span>
+        </summary>
+        <ul class="ul">
+          <li>Queue list: filters by status/date/submitter.</li>
+          <li>Detail view: preview assets, add internal notes, approve/reject with reason codes.</li>
+          <li>Audit trail: show history of decisions and changes.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="review" class="section">
+      <h2>Review workflow</h2>
+
+      <details class="details" open>
+        <summary>
+          <span>1) State machine</span>
+          <span class="meta">Deliverable: states + transitions</span>
+        </summary>
+        <ul class="ul">
+          <li>Define canonical states: <code>draft</code>, <code>submitted</code>, <code>in_review</code>, <code>approved</code>, <code>rejected</code>, <code>published</code>.</li>
+          <li>Specify transitions and who can perform them.</li>
+          <li>Ensure state changes are atomic (avoid double-approval races).</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>2) Notifications & SLAs</span>
+          <span class="meta">Deliverable: notification rules</span>
+        </summary>
+        <ul class="ul">
+          <li>Notify reviewers on new submissions; notify submitters on decision.</li>
+          <li>Optional: reminders on aging items.</li>
+          <li>Keep notification content generic (don’t leak private data into email).</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>3) Publishing boundaries</span>
+          <span class="meta">Deliverable: publish policy</span>
+        </summary>
+        <ul class="ul">
+          <li>Decide what “published” means: visible on a public site, or available to an internal audience.</li>
+          <li>Require approvals before publish if needed.</li>
+          <li>Record who published and when.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="deploy" class="section">
+      <h2>Deployment & security options</h2>
+
+      <details class="details" open>
+        <summary>
+          <span>A) Public checklist hosting (this page)</span>
+          <span class="meta">Deliverable: pick provider + domain</span>
+        </summary>
+        <ul class="ul">
+          <li>Host as static files on: Cloudflare Pages / Vercel / Netlify / GitHub Pages.</li>
+          <li>Use a custom domain (e.g. <code>checklist.example.com</code>), HTTPS enforced.</li>
+          <li>No environment variables required for this static page.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>B) App hosting (Next + Strapi)</span>
+          <span class="meta">Deliverable: architecture choice</span>
+        </summary>
+        <ul class="ul">
+          <li>Next: Vercel/Netlify/Cloudflare Pages (if compatible) or a container platform.</li>
+          <li>Strapi: typically container/VM (needs DB + storage); ensure backups, patching, and restricted admin access.</li>
+          <li>Use separate environments: dev / staging / prod.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>C) Security baseline</span>
+          <span class="meta">Deliverable: hardening checklist</span>
+        </summary>
+        <ul class="ul">
+          <li>Restrict Strapi admin with IP allowlist or SSO gateway.</li>
+          <li>Enable rate limiting; apply WAF protections where available.</li>
+          <li>Use private object storage + signed URLs; scan uploads if risk requires it.</li>
+          <li>Logging: auth events, role changes, review actions; define retention.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>D) Public vs private: recommended safest choices</span>
+          <span class="meta">Deliverable: decision record</span>
+        </summary>
+        <ul class="ul">
+          <li><strong>Public checklist:</strong> Cloudflare Pages (simple static hosting) is a strong default.</li>
+          <li><strong>Private checklist:</strong> Cloudflare Pages + <strong>Cloudflare Access</strong> (SSO gate) is typically the safest and simplest to operate.</li>
+          <li>If using Vercel/Netlify: use their auth/gating options or front with Cloudflare Access when possible.</li>
+        </ul>
+      </details>
+
+      <article class="card" style="margin-top:12px">
+        <h3>Custom domain: safe public hosting options (summary)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Provider</th>
+                <th>Best for</th>
+                <th>Custom domain</th>
+                <th>Private access</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Cloudflare Pages</td>
+                <td>Static sites + tight security controls</td>
+                <td>Yes</td>
+                <td>Excellent via Cloudflare Access</td>
+                <td>Great default if your DNS is on Cloudflare already.</td>
+              </tr>
+              <tr>
+                <td>Vercel</td>
+                <td>Next.js apps</td>
+                <td>Yes</td>
+                <td>Possible (varies); often easiest via external gate</td>
+                <td>Best DX for Next. For private-only pages, evaluate gating carefully.</td>
+              </tr>
+              <tr>
+                <td>Netlify</td>
+                <td>Static + JAMstack</td>
+                <td>Yes</td>
+                <td>Possible via add-ons / edge / external gate</td>
+                <td>Solid choice; enterprise features vary by plan.</td>
+              </tr>
+              <tr>
+                <td>GitHub Pages</td>
+                <td>Open-source/public docs</td>
+                <td>Yes</td>
+                <td>Not ideal (public by default)</td>
+                <td>Great for public content; not a privacy boundary by itself.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small">For private/internal checklists, prefer an access gateway (e.g. Cloudflare Access) over “security by obscurity”.</p>
+      </article>
+    </section>
+
+    <section id="subagents" class="section">
+      <h2>Sub-agent plan</h2>
+      <div id="agentsDynamic" class="agents"></div>
+      <p class="small">The cards above are rendered from <code>data/progress.json</code>. The expandable sections below are reference templates.</p>
+
+      <hr class="sep" />
+
+      <h3>Reference templates (optional)</h3>
+      <p class="small">Each sub-agent should produce a concrete artifact (doc, schema, PR checklist) that can be reviewed quickly.</p>
+
+      <details class="details" open>
+        <summary>
+          <span>Sub-agent A — Strapi schema & permissions</span>
+          <span class="meta">Goal: define CMS shape + access model</span>
+        </summary>
+        <ul class="ul">
+          <li><strong>Goals:</strong> propose content types, relations, and role permissions matrix.</li>
+          <li><strong>Deliverables:</strong>
+            <ul class="ul">
+              <li>Schema outline: entities + fields + relationships.</li>
+              <li>Roles matrix: submitter/reviewer/admin permissions per endpoint/content type.</li>
+              <li>Storage recommendation: local vs S3-compatible, plus signed URL approach.</li>
+            </ul>
+          </li>
+          <li><strong>Done when:</strong> the team can implement Strapi types without ambiguity.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>Sub-agent B — Next auth & role mapping</span>
+          <span class="meta">Goal: secure authentication + authorization plan</span>
+        </summary>
+        <ul class="ul">
+          <li><strong>Goals:</strong> pick auth strategy and specify how roles are derived and enforced.</li>
+          <li><strong>Deliverables:</strong>
+            <ul class="ul">
+              <li>Auth decision doc (options + recommendation).</li>
+              <li>Threat model notes: session security, CSRF, role escalation risks.</li>
+              <li>API boundary: what runs server-side vs client-side.</li>
+            </ul>
+          </li>
+          <li><strong>Done when:</strong> implementers have a clear “how we log in and authorize” spec.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>Sub-agent C — Upload flow & validation</span>
+          <span class="meta">Goal: reliable uploads + safe file handling</span>
+        </summary>
+        <ul class="ul">
+          <li><strong>Goals:</strong> specify upload architecture (direct-to-storage vs proxy), validation, and scanning hooks.</li>
+          <li><strong>Deliverables:</strong>
+            <ul class="ul">
+              <li>Upload sequence diagram (text-based is fine).</li>
+              <li>Validation rules + limits (size/type/rate).</li>
+              <li>Error handling UX checklist.</li>
+            </ul>
+          </li>
+          <li><strong>Done when:</strong> there’s a clear safe path for large files and failures.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>Sub-agent D — Review workflow & auditability</span>
+          <span class="meta">Goal: state machine + reviewer UX</span>
+        </summary>
+        <ul class="ul">
+          <li><strong>Goals:</strong> define states, transitions, notifications, and audit trail requirements.</li>
+          <li><strong>Deliverables:</strong>
+            <ul class="ul">
+              <li>State machine spec + transition permissions.</li>
+              <li>Reviewer queue requirements and edge cases (race conditions, re-review, overrides).</li>
+              <li>Audit log fields and retention guidance.</li>
+            </ul>
+          </li>
+          <li><strong>Done when:</strong> “who can do what when” is unambiguous.</li>
+        </ul>
+      </details>
+
+      <details class="details">
+        <summary>
+          <span>Sub-agent E — Deployment & security posture</span>
+          <span class="meta">Goal: choose hosting + protective controls</span>
+        </summary>
+        <ul class="ul">
+          <li><strong>Goals:</strong> propose deployment topology for Next + Strapi + DB + storage; define access restrictions.</li>
+          <li><strong>Deliverables:</strong>
+            <ul class="ul">
+              <li>Environment plan: dev/staging/prod separation.</li>
+              <li>Access controls: protect Strapi admin (SSO gateway/IP allowlist), WAF/rate-limits.</li>
+              <li>Backup/restore plan (RPO/RTO assumptions, at a high level).</li>
+            </ul>
+          </li>
+          <li><strong>Done when:</strong> team can proceed with infra without revisiting basics.</li>
+        </ul>
+      </details>
+    </section>
+
+    <footer class="footer">
+      <p>This is a standalone static page. It contains no secrets and is suitable for public hosting.</p>
+      <p>To update: edit <code>index.html</code> (tasks, owners, statuses) and redeploy.</p>
+    </footer>
+  </main>
+
+  <script>
+    (function(){
+      // Public-safe: no analytics, no tracking. Only client-side filtering.
+      const $ = (sel) => document.querySelector(sel);
+      const q = $('#q');
+      const statusFilter = $('#statusFilter');
+      const table = $('#statusTable');
+      const lastUpdated = $('#lastUpdated');
+
+      // Render a human-readable build time (local to the viewer).
+      const now = new Date();
+      lastUpdated.textContent = now.toLocaleString(undefined, {year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit'});
+
+      function norm(s){ return (s||'').toLowerCase().trim(); }
+
+      function applyFilters(){
+        const query = norm(q.value);
+        const wantedStatus = statusFilter.value;
+        const rows = table.tBodies[0].rows;
+
+        for(const row of rows){
+          const rowStatus = row.getAttribute('data-status') || 'todo';
+          const text = norm(row.innerText);
+          const matchQuery = !query || text.includes(query);
+          const matchStatus = (wantedStatus === 'all') || (rowStatus === wantedStatus);
+          row.style.display = (matchQuery && matchStatus) ? '' : 'none';
+        }
+      }
+
+      q.addEventListener('input', applyFilters);
+      statusFilter.addEventListener('change', applyFilters);
+      applyFilters();
+    })();
+  </script>
+</body>
+</html>

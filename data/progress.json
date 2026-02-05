@@ -1,0 +1,81 @@
+{
+  "lastUpdated": "2026-02-05T03:59:00.000Z",
+  "project": {
+    "name": "Strapi Portfolio Upload + Review Workflow",
+    "publicSafe": true
+  },
+  "statusRows": [
+    {
+      "area": "Strapi",
+      "task": "Add review_status field to portfolio",
+      "owner": "main",
+      "status": "todo",
+      "notes": "Enum: draft|pending|approved|rejected. Add submitted_at (optional)."
+    },
+    {
+      "area": "Frontend",
+      "task": "Filter public portfolio queries",
+      "owner": "main",
+      "status": "todo",
+      "notes": "Only show published + review_status=approved." 
+    },
+    {
+      "area": "Upload App",
+      "task": "Auth + roles (uploader/admin)",
+      "owner": "main",
+      "status": "todo",
+      "notes": "Two accounts: uploader can create/update own; admin can approve/publish/delete."
+    },
+    {
+      "area": "Workflow",
+      "task": "Uploader edits published content → auto-unpublish + pending",
+      "owner": "main",
+      "status": "todo",
+      "notes": "Any uploader update triggers unpublish and status pending; admin re-approves + publishes."
+    },
+    {
+      "area": "Deployment",
+      "task": "Host this checklist publicly on custom domain",
+      "owner": "main",
+      "status": "todo",
+      "notes": "Recommended: Cloudflare Pages (static)."
+    }
+  ],
+  "agents": [
+    {
+      "key": "A",
+      "name": "strapi-review-status",
+      "goal": "Add review_status workflow fields and validate transitions.",
+      "deliverables": ["Strapi schema changes", "Admin UI notes", "Migration steps"],
+      "status": "planned"
+    },
+    {
+      "key": "B",
+      "name": "upload-auth-roles",
+      "goal": "Implement uploader/admin login + permissions in upload web app.",
+      "deliverables": ["Login page", "Role checks on API routes", "No secrets in browser"],
+      "status": "planned"
+    },
+    {
+      "key": "C",
+      "name": "upload-portfolio-form",
+      "goal": "Mobile-first portfolio upload form with draft/pending.",
+      "deliverables": ["Form + validation", "Cover + gallery uploads", "Submit/Save draft"],
+      "status": "planned"
+    },
+    {
+      "key": "D",
+      "name": "review-queue",
+      "goal": "Admin review queue (pending list) + approve/publish/reject/delete.",
+      "deliverables": ["Review UI", "Approve+publish action", "Reject reason (optional)"],
+      "status": "planned"
+    }
+  ],
+  "activity": [
+    {
+      "time": "2026-02-05T03:58:00.000Z",
+      "type": "note",
+      "text": "Spec confirmed: uploader edits to published content will unpublish + return to pending; uploader can only see own submissions."
+    }
+  ]
+}
