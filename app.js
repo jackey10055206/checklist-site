@@ -5,7 +5,7 @@ async function loadProgress() {
 }
 
 function badge(status) {
-  const label = status === 'done' ? 'Done' : status === 'inprogress' ? 'In progress' : status === 'blocked' ? 'Blocked' : 'To do';
+  const label = status === 'done' ? '已完成' : status === 'inprogress' ? '進行中' : status === 'blocked' ? '卡住' : '待辦';
   return `<span class="status ${status === 'todo' ? '' : status}">${label}</span>`;
 }
 
@@ -46,7 +46,7 @@ function renderAgents(agents) {
           <div class="agent-key">${escapeHtml(a.key)}</div>
           <div>
             <div class="agent-name">${escapeHtml(a.name)}</div>
-            <div class="small">Status: <strong>${escapeHtml(a.status || 'planned')}</strong></div>
+            <div class="small">狀態：<strong>${escapeHtml(a.status || 'planned')}</strong></div>
           </div>
         </div>
         <p class="agent-goal">${escapeHtml(a.goal || '')}</p>
@@ -60,7 +60,7 @@ function renderActivity(items) {
   const el = document.getElementById('activityLog');
   if (!el) return;
   if (!items || items.length === 0) {
-    el.innerHTML = '<p class="small">No activity yet.</p>';
+    el.innerHTML = '<p class="small">目前還沒有活動紀錄。</p>';
     return;
   }
   el.innerHTML = `<ul class="ul">${items.slice().reverse().map((it) => {

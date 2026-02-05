@@ -1,90 +1,90 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>Project Checklist & Sub-Agent Plan</title>
-  <meta name="description" content="Public-friendly project checklist for Strapi + Next upload app, review workflow, and deployment/security options." />
+  <title>專案清單與子 Agent 計畫</title>
+  <meta name="description" content="公開友善的專案進度看板：Strapi + Next.js 上傳站、審核流程、部署與安全。" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <main class="container">
     <header class="header">
       <div>
-        <h1>Project Checklist & Sub-Agent Plan</h1>
-        <p class="subtitle">Public-safe project dashboard. Progress is loaded from a JSON file (no secrets).</p>
+        <h1>專案清單與子 Agent 計畫</h1>
+        <p class="subtitle">公開安全的專案進度看板（由 JSON 讀取進度，不包含任何敏感資訊）。</p>
         <div class="kv" aria-label="project meta">
-          <span class="pill"><strong>Stack:</strong> Strapi (CMS) + Next.js (Upload app)</span>
-          <span class="pill"><strong>Focus:</strong> Auth/roles, review workflow, deployment & security</span>
-          <span class="pill"><strong>Last updated:</strong> <span id="lastUpdated">—</span></span>
+          <span class="pill"><strong>技術：</strong> Strapi（CMS）+ Next.js（上傳/審核入口）</span>
+          <span class="pill"><strong>重點：</strong> 帳號權限、審核流程、部署與安全</span>
+          <span class="pill"><strong>最後更新：</strong> <span id="lastUpdated">—</span></span>
         </div>
       </div>
       <div class="badges" aria-label="legend">
-        <span class="badge"><span class="status done" aria-hidden="true"></span> Done</span>
-        <span class="badge"><span class="status inprogress" aria-hidden="true"></span> In progress</span>
-        <span class="badge"><span class="status" aria-hidden="true"></span> To do</span>
-        <span class="badge"><span class="status blocked" aria-hidden="true"></span> Blocked</span>
+        <span class="badge"><span class="status done" aria-hidden="true"></span> 已完成</span>
+        <span class="badge"><span class="status inprogress" aria-hidden="true"></span> 進行中</span>
+        <span class="badge"><span class="status" aria-hidden="true"></span> 待辦</span>
+        <span class="badge"><span class="status blocked" aria-hidden="true"></span> 卡住</span>
       </div>
     </header>
 
     <section class="grid" aria-label="overview">
       <article class="card">
-        <h2>How to use</h2>
+        <h2>怎麼看這頁</h2>
         <div class="callout">
-          <strong>Goal:</strong> A single place to track what must change in Strapi, what the Next upload app must do (auth/roles), how review/publish works, and what deployment/security posture we want.
+          <strong>目標：</strong> 把 Strapi 需要改的地方、上傳站（Next.js）需要做的事情、審核/發布流程、以及部署/安全策略，都集中在同一頁，方便對外同步進度。
         </div>
         <ol class="ul">
-          <li>Start with the <strong>Status Table</strong> to see what’s blocking progress.</li>
-          <li>Expand tasks in each section for acceptance criteria and notes.</li>
-          <li>Spin up sub-agents from the <strong>Sub-Agent Plan</strong> to parallelize work.</li>
+          <li>先看 <strong>狀態表</strong>：目前做到哪、卡在哪。</li>
+          <li>各區塊可以展開 <strong>詳細任務</strong>：包含驗收標準與注意事項。</li>
+          <li>用 <strong>子 Agent 計畫</strong> 把工作切開並行，並在下方活動紀錄追蹤進度。</li>
         </ol>
-        <p class="small">Tip: this page is designed to be hosted publicly (no credentials, no internal URLs, no secrets).</p>
+        <p class="small">提醒：此頁設計為可公開（不包含任何帳密、內網連結或敏感資訊）。</p>
       </article>
 
       <aside class="card">
-        <h2>Quick links</h2>
+        <h2>快速連結</h2>
         <ul class="ul">
-          <li><a href="#status">Status table</a></li>
-          <li><a href="#strapi">Strapi changes</a></li>
-          <li><a href="#next">Next upload app (auth/roles)</a></li>
-          <li><a href="#review">Review workflow</a></li>
-          <li><a href="#deploy">Deployment & security options</a></li>
-          <li><a href="#subagents">Sub-agent plan</a></li>
-          <li><a href="#activity">Activity log</a></li>
+          <li><a href="#status">狀態表</a></li>
+          <li><a href="#strapi">Strapi 調整</a></li>
+          <li><a href="#next">上傳站（Next.js：帳號/權限）</a></li>
+          <li><a href="#review">審核流程</a></li>
+          <li><a href="#deploy">部署與安全</a></li>
+          <li><a href="#subagents">子 Agent 計畫</a></li>
+          <li><a href="#activity">活動紀錄</a></li>
         </ul>
-        <h3>Filters</h3>
+        <h3>篩選</h3>
         <div class="filters" role="group" aria-label="filters">
           <label>
-            Status
+            狀態
             <select id="statusFilter">
-              <option value="all">All</option>
-              <option value="todo">To do</option>
-              <option value="inprogress">In progress</option>
-              <option value="done">Done</option>
-              <option value="blocked">Blocked</option>
+              <option value="all">全部</option>
+              <option value="todo">待辦</option>
+              <option value="inprogress">進行中</option>
+              <option value="done">已完成</option>
+              <option value="blocked">卡住</option>
             </select>
           </label>
           <label>
-            Search
-            <input id="q" type="search" placeholder="Find a task (title, owner, notes)…" />
+            搜尋
+            <input id="q" type="search" placeholder="搜尋任務（標題 / 負責人 / 備註）…" />
           </label>
         </div>
-        <p class="small">Filtering only affects the status table.</p>
+        <p class="small">篩選只會影響「狀態表」。</p>
       </aside>
     </section>
 
     <section id="status" class="section">
-      <h2>Status Table</h2>
+      <h2>狀態表</h2>
       <div class="table-wrap" aria-label="status table">
         <table id="statusTable">
           <thead>
             <tr>
-              <th style="width:14%">Area</th>
-              <th style="width:22%">Task</th>
-              <th style="width:14%">Owner</th>
-              <th style="width:12%">Status</th>
-              <th style="width:38%">Notes / Acceptance criteria (public-safe)</th>
+              <th style="width:14%">區域</th>
+              <th style="width:22%">任務</th>
+              <th style="width:14%">負責</th>
+              <th style="width:12%">狀態</th>
+              <th style="width:38%">備註 / 驗收標準（公開安全）</th>
             </tr>
           </thead>
           <tbody>
@@ -92,11 +92,11 @@
           </tbody>
         </table>
       </div>
-      <p class="small">This table is rendered from <code>data/progress.json</code>. Update that file to reflect real owners/statuses.</p>
+      <p class="small">此表格由 <code>data/progress.json</code> 渲染。要更新進度/負責人/狀態，只要改那個檔案即可。</p>
     </section>
 
     <section id="strapi" class="section">
-      <h2>Strapi changes</h2>
+      <h2>Strapi 調整</h2>
 
       <details class="details" open>
         <summary>
@@ -150,13 +150,13 @@
     </section>
 
     <section id="activity" class="section">
-      <h2>Activity log</h2>
+      <h2>活動紀錄</h2>
       <div class="card" id="activityLog"></div>
-      <p class="small">Public-safe log: which steps were decided, and what agents were spawned (no internal URLs or credentials).</p>
+      <p class="small">公開安全的紀錄：只記「決策/進度/子 agent 任務」，不包含內網連結或任何憑證。</p>
     </section>
 
     <section id="next" class="section">
-      <h2>Next upload app (auth/roles)</h2>
+      <h2>上傳站（Next.js：帳號 / 權限）</h2>
 
       <details class="details" open>
         <summary>
@@ -208,7 +208,7 @@
     </section>
 
     <section id="review" class="section">
-      <h2>Review workflow</h2>
+      <h2>審核流程</h2>
 
       <details class="details" open>
         <summary>
@@ -248,7 +248,7 @@
     </section>
 
     <section id="deploy" class="section">
-      <h2>Deployment & security options</h2>
+      <h2>部署與安全</h2>
 
       <details class="details" open>
         <summary>
@@ -349,14 +349,14 @@
     </section>
 
     <section id="subagents" class="section">
-      <h2>Sub-agent plan</h2>
+      <h2>子 Agent 計畫</h2>
       <div id="agentsDynamic" class="agents"></div>
-      <p class="small">The cards above are rendered from <code>data/progress.json</code>. The expandable sections below are reference templates.</p>
+      <p class="small">上面的卡片由 <code>data/progress.json</code> 渲染；下方可展開的內容是參考模板（之後可逐步中文化/精簡）。</p>
 
       <hr class="sep" />
 
-      <h3>Reference templates (optional)</h3>
-      <p class="small">Each sub-agent should produce a concrete artifact (doc, schema, PR checklist) that can be reviewed quickly.</p>
+      <h3>參考模板（可選）</h3>
+      <p class="small">每個子 agent 都應該產出可快速驗收的成果（文件/清單/PR）。</p>
 
       <details class="details" open>
         <summary>
