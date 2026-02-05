@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-05T03:59:00.000Z",
+  "lastUpdated": "2026-02-05T05:12:00.000Z",
   "project": {
     "name": "Strapi Portfolio Upload + Review Workflow",
     "publicSafe": true
@@ -7,75 +7,80 @@
   "statusRows": [
     {
       "area": "Strapi",
-      "task": "Add review_status field to portfolio",
-      "owner": "main",
-      "status": "todo",
-      "notes": "Enum: draft|pending|approved|rejected. Add submitted_at (optional)."
+      "task": "新增 portfolio.review_status（審核狀態）",
+      "owner": "subagent-strapi-review-workflow",
+      "status": "inprogress",
+      "notes": "Enum：draft|pending|approved|rejected；（可選）submitted_at/reviewed_at。"
     },
     {
-      "area": "Frontend",
-      "task": "Filter public portfolio queries",
+      "area": "前台網站",
+      "task": "Portfolio 對外只顯示 approved + published",
       "owner": "main",
       "status": "todo",
-      "notes": "Only show published + review_status=approved." 
+      "notes": "API 查詢/前端取資料要加 filter，避免未審內容外露。"
     },
     {
-      "area": "Upload App",
-      "task": "Auth + roles (uploader/admin)",
-      "owner": "main",
-      "status": "todo",
-      "notes": "Two accounts: uploader can create/update own; admin can approve/publish/delete."
+      "area": "上傳入口（Upload Portal）",
+      "task": "架構設計：是否獨立 Next app、登入/權限/流程",
+      "owner": "subagent-upload-portal-architecture",
+      "status": "inprogress",
+      "notes": "Mobile-first；uploader/admin 兩角色；所有寫入走 server-side（不在瀏覽器放 token）。"
+    },
+    {
+      "area": "上傳入口（Upload Portal）",
+      "task": "MVP 實作：登入 + 表單骨架 + API route stubs",
+      "owner": "subagent-upload-portal-implementation",
+      "status": "inprogress",
+      "notes": "先可跑起來；之後再接 Strapi 真實寫入/上傳。"
     },
     {
       "area": "Workflow",
-      "task": "Uploader edits published content → auto-unpublish + pending",
-      "owner": "main",
-      "status": "todo",
-      "notes": "Any uploader update triggers unpublish and status pending; admin re-approves + publishes."
+      "task": "Uploader 修改已發布內容 → 自動下線（unpublish）+ 回 pending",
+      "owner": "subagent-upload-portal-architecture",
+      "status": "inprogress",
+      "notes": "由 Upload Portal server 規則強制；admin 重新核准再 publish。"
     },
     {
-      "area": "Deployment",
-      "task": "Host this checklist publicly on custom domain",
+      "area": "部署",
+      "task": "checklist.jackeyluo.me 對外上線（Cloudflare Pages + Git）",
       "owner": "main",
-      "status": "todo",
-      "notes": "Recommended: Cloudflare Pages (static)."
+      "status": "inprogress",
+      "notes": "正在 Cloudflare Pages 綁自訂網域；若 DNS 記錄被鎖（read-only）需先解除。"
     }
   ],
   "agents": [
     {
       "key": "A",
-      "name": "strapi-review-status",
-      "goal": "Add review_status workflow fields and validate transitions.",
-      "deliverables": ["Strapi schema changes", "Admin UI notes", "Migration steps"],
-      "status": "planned"
+      "name": "subagent-strapi-review-workflow",
+      "goal": "在 Strapi 實作 portfolio 審核狀態欄位與相關設定（公開安全）。",
+      "deliverables": ["Strapi schema 變更步驟", "Permissions/查詢建議", "實作注意事項"],
+      "status": "running"
     },
     {
       "key": "B",
-      "name": "upload-auth-roles",
-      "goal": "Implement uploader/admin login + permissions in upload web app.",
-      "deliverables": ["Login page", "Role checks on API routes", "No secrets in browser"],
-      "status": "planned"
+      "name": "subagent-upload-portal-architecture",
+      "goal": "設計 Upload Portal 架構：登入/角色/流程/安全邊界，並產出可落地的實作計畫。",
+      "deliverables": ["架構決策（獨立 app 或整合）", "狀態機與權限矩陣", "API routes 規格"],
+      "status": "running"
     },
     {
       "key": "C",
-      "name": "upload-portfolio-form",
-      "goal": "Mobile-first portfolio upload form with draft/pending.",
-      "deliverables": ["Form + validation", "Cover + gallery uploads", "Submit/Save draft"],
-      "status": "planned"
-    },
-    {
-      "key": "D",
-      "name": "review-queue",
-      "goal": "Admin review queue (pending list) + approve/publish/reject/delete.",
-      "deliverables": ["Review UI", "Approve+publish action", "Reject reason (optional)"],
-      "status": "planned"
+      "name": "subagent-upload-portal-implementation",
+      "goal": "先把 Upload Portal MVP 跑起來（登入 + 表單骨架 + server routes stubs），之後再接 Strapi。",
+      "deliverables": ["可本機跑的 Next app", "登入頁/守門", "上傳表單骨架"],
+      "status": "running"
     }
   ],
   "activity": [
     {
       "time": "2026-02-05T03:58:00.000Z",
       "type": "note",
-      "text": "Spec confirmed: uploader edits to published content will unpublish + return to pending; uploader can only see own submissions."
+      "text": "規格確認：Uploader 修改已發布內容 → 立刻 unpublish 並回 pending；Uploader 只能看自己的資料。"
+    },
+    {
+      "time": "2026-02-05T05:10:00.000Z",
+      "type": "spawn",
+      "text": "已啟動 3 個子 agent：A(Strapi review_status)、B(Upload Portal 架構)、C(Upload Portal MVP 實作)。"
     }
   ]
 }
