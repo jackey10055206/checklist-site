@@ -351,107 +351,12 @@
     <section id="subagents" class="section">
       <h2>子 Agent 計畫</h2>
       <div id="agentsDynamic" class="agents"></div>
-      <p class="small">上面的卡片由 <code>data/progress.json</code> 渲染；下方可展開的內容是參考模板（之後可逐步中文化/精簡）。</p>
-
-      <hr class="sep" />
-
-      <h3>參考模板（可選）</h3>
-      <p class="small">每個子 agent 都應該產出可快速驗收的成果（文件/清單/PR）。</p>
-
-      <details class="details" open>
-        <summary>
-          <span>Sub-agent A — Strapi schema & permissions</span>
-          <span class="meta">Goal: define CMS shape + access model</span>
-        </summary>
-        <ul class="ul">
-          <li><strong>Goals:</strong> propose content types, relations, and role permissions matrix.</li>
-          <li><strong>Deliverables:</strong>
-            <ul class="ul">
-              <li>Schema outline: entities + fields + relationships.</li>
-              <li>Roles matrix: submitter/reviewer/admin permissions per endpoint/content type.</li>
-              <li>Storage recommendation: local vs S3-compatible, plus signed URL approach.</li>
-            </ul>
-          </li>
-          <li><strong>Done when:</strong> the team can implement Strapi types without ambiguity.</li>
-        </ul>
-      </details>
-
-      <details class="details">
-        <summary>
-          <span>Sub-agent B — Next auth & role mapping</span>
-          <span class="meta">Goal: secure authentication + authorization plan</span>
-        </summary>
-        <ul class="ul">
-          <li><strong>Goals:</strong> pick auth strategy and specify how roles are derived and enforced.</li>
-          <li><strong>Deliverables:</strong>
-            <ul class="ul">
-              <li>Auth decision doc (options + recommendation).</li>
-              <li>Threat model notes: session security, CSRF, role escalation risks.</li>
-              <li>API boundary: what runs server-side vs client-side.</li>
-            </ul>
-          </li>
-          <li><strong>Done when:</strong> implementers have a clear “how we log in and authorize” spec.</li>
-        </ul>
-      </details>
-
-      <details class="details">
-        <summary>
-          <span>Sub-agent C — Upload flow & validation</span>
-          <span class="meta">Goal: reliable uploads + safe file handling</span>
-        </summary>
-        <ul class="ul">
-          <li><strong>Goals:</strong> specify upload architecture (direct-to-storage vs proxy), validation, and scanning hooks.</li>
-          <li><strong>Deliverables:</strong>
-            <ul class="ul">
-              <li>Upload sequence diagram (text-based is fine).</li>
-              <li>Validation rules + limits (size/type/rate).</li>
-              <li>Error handling UX checklist.</li>
-            </ul>
-          </li>
-          <li><strong>Done when:</strong> there’s a clear safe path for large files and failures.</li>
-        </ul>
-      </details>
-
-      <details class="details">
-        <summary>
-          <span>Sub-agent D — Review workflow & auditability</span>
-          <span class="meta">Goal: state machine + reviewer UX</span>
-        </summary>
-        <ul class="ul">
-          <li><strong>Goals:</strong> define states, transitions, notifications, and audit trail requirements.</li>
-          <li><strong>Deliverables:</strong>
-            <ul class="ul">
-              <li>State machine spec + transition permissions.</li>
-              <li>Reviewer queue requirements and edge cases (race conditions, re-review, overrides).</li>
-              <li>Audit log fields and retention guidance.</li>
-            </ul>
-          </li>
-          <li><strong>Done when:</strong> “who can do what when” is unambiguous.</li>
-        </ul>
-      </details>
-
-      <details class="details">
-        <summary>
-          <span>Sub-agent E — Deployment & security posture</span>
-          <span class="meta">Goal: choose hosting + protective controls</span>
-        </summary>
-        <ul class="ul">
-          <li><strong>Goals:</strong> propose deployment topology for Next + Strapi + DB + storage; define access restrictions.</li>
-          <li><strong>Deliverables:</strong>
-            <ul class="ul">
-              <li>Environment plan: dev/staging/prod separation.</li>
-              <li>Access controls: protect Strapi admin (SSO gateway/IP allowlist), WAF/rate-limits.</li>
-              <li>Backup/restore plan (RPO/RTO assumptions, at a high level).</li>
-            </ul>
-          </li>
-          <li><strong>Done when:</strong> team can proceed with infra without revisiting basics.</li>
-        </ul>
-      </details>
+      <p class="small">這裡只顯示「實際存在的子 agent」。新增/更新狀態請改 <code>data/progress.json</code>。</p>
     </section>
 
     <footer class="footer">
-      <p>This is a standalone static page. It contains no secrets and is suitable for public hosting.</p>
-      <p>To update: edit <code>index.html</code> (tasks, owners, statuses) and redeploy.</p>
+      <p>這是一個公開安全的靜態頁面（不包含任何憑證/內網資訊），適合對外公開。</p>
+      <p>更新方式：修改 <code>data/progress.json</code> 後 push，網站會自動更新。</p>
     </footer>
   </main>
 
